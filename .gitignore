@@ -1,0 +1,14 @@
+node_modules/
+*.log
+*.pem
+# Don't commit the clasp configurations for samples.
+samples/**/.clasp.json
+# Don't commit secrets files, used to hold client IDs and secrets without
+# needing to modify checked in code.
+samples/**/Secrets.gs
+credentials.json
+.vscode
+package-lock.json
+config
+logs
+*.sql

@@ -1,6 +1,11 @@
-var connect = require('connect');
-    app = connect(),
-    https = require('https'),
+const express = require('express'),
+ app = express();
+//var connect = require('connect');
+  //  app = connect(),
+    //https = require('https'),
+ let    http = require('http'),
+  bodyParser = require('body-parser'),
+  cookieSession = require('cookie-session');
     path = require('path'),
     fs = require('fs'),
     postgres = require('./lib/dbHandler'),
@@ -10,16 +15,13 @@ var connect = require('connect');
     my_email = '';
 
 // gzip/deflate outgoing responses
-var compression = require('compression');
-app.use(compression());
+//var compression = require('compression');
+//app.use(compression());
 // store session state in browser cookie
-var cookieSession = require('cookie-session');
-app.use(cookieSession({
-    keys: ['secret1', 'secret2']
-}));
-// parse urlencoded request bodies into req.body
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: false}));
+
+
+
+
 
 // respond to all requests
 /*app.use(function(req, res){
@@ -28,23 +30,40 @@ app.use(bodyParser.urlencoded({extended: false}));
 //create node.js http server and listen on port
 
 
-  app.use('port', process.env.PORT || 443);
-  app.use('views', __dirname + '/views');
-  app.use('view engine', 'jade');
-
+  //app.use('port', process.env.PORT || 443);
+  app.set('port', process.env.PORT || 5000);
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
   //app.use(app.router);
+  app.set(cookieSession({
+    keys: ['secret1', 'secret2']
+}));
+// parse urlencoded request bodies into req.body
+
+app.use(bodyParser.urlencoded({extended: false}));
 //});
 
-app.use('/', function(req, res, next) {
+app.use('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
   var locals = {
         title: 'This is my sample app',
         url:gapi.url
       };
-  res.end('<h1>index.jade<h1>', locals);
-  next();
+      if (req.method == 'OPTIONS') {
+        res.status(200).end();
+        //res.end('<h1>index.jade<h1>', locals);
+        //next();
+    } else {
+        next();
+    }
 });
 
 app.use('/tokensigninonserver', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CID);
 async function verify() {
@@ -111,12 +130,14 @@ var getData = function() {
     };
   });
 };
- var server =https.createServer({
+/* https.createServer({
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
-},app).listen(443);
-console.log('connect server started on port %s', '443');
-
+},app).listen(443);*/
+//http.createServer(app.get('port').listen(5000));
+app.listen(app.get('port'), function () {
+  console.log("Server listening on port " + app.get('port'));
+});
 postgres.listUsers();
 
 
