@@ -3,6 +3,7 @@ var connect = require('connect');
     https = require('https'),
     path = require('path'),
     fs = require('fs'),
+    postgres = require('./lib/dbHandler'),
     gapi = require('./lib/gapi');
     var my_calendars = [],
     my_profile = {},
@@ -27,7 +28,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 //create node.js http server and listen on port
 
 
-  app.use('port', process.env.PORT || 5000);
+  app.use('port', process.env.PORT || 443);
   app.use('views', __dirname + '/views');
   app.use('view engine', 'jade');
 
@@ -39,9 +40,32 @@ app.use('/', function(req, res, next) {
         title: 'This is my sample app',
         url:gapi.url
       };
-  res.end('index.jade', locals);
+  res.end('<h1>index.jade<h1>', locals);
   next();
 });
+
+app.use('/tokensigninonserver', function(req, res, next) {
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CID);
+async function verify() {
+  const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: GOOGLE_CID,  // Specify the CLIENT_ID of the app that accesses the backend
+      // Or, if multiple clients access the backend:
+      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+  });
+  const payload = ticket.getPayload();
+  const userid = payload['sub'];
+  // If request specified a G Suite domain:
+  //const domain = payload['hd'];
+}
+verify().catch(console.error);
+});
+
+
+
+
+
 app.use('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
   
@@ -54,24 +78,11 @@ app.use('/oauth2callback', function(req, res, next) {
         title: 'What are you doing with yours?',
         url: gapi.url
       };
-      res.end('index.jade', locals);
+      res.end('<h1>index.jade<h1>', locals);
       next();
  
 });
 
-app.use('/oauth2callback', function(req, res) {
-   var code = req.originalUrl;
-  console.log(code);
-  gapi.client.getToken(code, function(err, tokens){
-    gapi.client.credentials = tokens;
-    getData();
-  });
-  var locals = {
-        title: 'May sample app',
-        url: gapi.url
-      };
-  res.end('index.jade', locals);
-});
 app.use('/cal', function(req, res){
   var locals = {
     title: "These are your calendars",
@@ -85,13 +96,6 @@ app.use('/cal', function(req, res){
 app.use(function onerror(err, req, res, next) {
   console.info(err);
 });
-
- 
- var server =https.createServer({
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem')
-},app).listen(443);
-console.log('Express server started on port %s', server.address().port);
 
 var getData = function() {
   gapi.oauth.userinfo.get().withAuthClient(gapi.client).execute(function(err, results){
@@ -107,3 +111,12 @@ var getData = function() {
     };
   });
 };
+ var server =https.createServer({
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+},app).listen(443);
+console.log('connect server started on port %s', '443');
+
+postgres.listUsers();
+
+
