@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan'),
@@ -24,6 +25,7 @@ app.set('port', process.env.PORT || 5000);
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(cors({origin: 'https://moft.eabonet.com'}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
