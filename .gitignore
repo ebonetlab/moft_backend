@@ -1,5 +1,5 @@
 node_modules/
-*.log
+*.logs
 *.pem
 # Don't commit the clasp configurations for samples.
 samples/**/.clasp.json
