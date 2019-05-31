@@ -16,31 +16,25 @@ router.post('/tokensigninonserver', function(req, res, next) {
   
       // Request headers you wish to allow
       res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-type,Accept, x-token, X-Key,application/json');
-  
-      // Set to true if you need the website to include cookies in the requests sent
-      // to the API (e.g. in case you use sessions)
-      //res.setHeader('Access-Control-Allow-Credentials', true);
-      //res.header("Access-Control-Allow-Origin", "*");
-      //res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-      //res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key,application/json,formdata");
  
-
-  //Verificar q l user is on db and after update, if not create it!!!!!!
   
   postgres.findUser(req.body.user.U3).then(function(response ){
     if(response.rows.length > 0){
       console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
       if(response.rows[0].email != req.body.user.U3){
       postgres.updateUser(req.body).then((rest)=>{
-        verify(req.body.auth.id_token).
-        then((resp)=>{
+        console.log(rest);
+        verify(req.body.auth.id_token).then((resp)=>{
           console.info(resp);
           res.send(response.rows[0].email).end();  
         }).catch(console.error);
       }
       ).catch(err=>console.error(err));
     }
-    res.send(response.rows[0].email).end(); 
+    verify(req.body.auth.id_token).then((resp)=>{
+      console.info(resp);
+      res.send(response.rows[0].email).end();  
+    }).catch(console.error);
     }
     else{
       postgres.createUser(req.body).then((respn)=>{
@@ -87,6 +81,7 @@ router.get('/cal', function(req, res){
 function verify(token) {
   const {OAuth2Client} = require('google-auth-library');
   const client = new OAuth2Client(process.env.GOOGLE_CID);
+  return new Promise((resolve, reject) => {
   client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CID,  // Specify the CLIENT_ID of the app that accesses the backend
@@ -96,12 +91,12 @@ function verify(token) {
     const payload = ticket.getPayload();
     const userid = payload['sub'];
     // If request specified a G Suite domain:
-    //const domain = payload['hd'];
-   console.log(userid);
+    const domain = payload['hd'];
+   console.log('G. userid' + userid );
+   console.info('Domain: If request specified a G Suite domain ' + domain);
+   (userid) ? resolve(true) :reject(false) ;
   })
   .catch(error=>console.error(error));;
-
-  
-
-}
+  });
+  }
 module.exports = router;
