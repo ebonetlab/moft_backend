@@ -16,7 +16,7 @@ module.exports = {
       // "production" is the environment name
       production: {
         // SSH key path, default to $HOME/.ssh
-        key: "~/ssh/id_rsa",
+        key: "C:/Users/berne/.ssh/blockchain.pem",
         // SSH user
         user: "ebonet",
         // SSH host
