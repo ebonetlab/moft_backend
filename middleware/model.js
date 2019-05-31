@@ -33,35 +33,37 @@ let postgresql = {
  
     },
     createUser : (user)=>{
+        return new Promise((resolve, reject) => {
          //Create an User @ moft_user table
             let query = `Insert into users (first_name,last_name,email, profile_path, token) 
-            VALUES('${user.first_name}','${user.last_name}','${user.email}','${user.profile_path}','${user.token}')`;
+            VALUES('${user.user.ofa}','${user.user.wea}','${user.user.U3}','${user.user.Paa}','${user.auth.id_token}')`;
             db.exec(query,  function(response){
-           let question = `The User ${user.first_name} ${iser.last_name} has been created  moft_db!!`;
+           //let question = `The User ${user.first_name} ${iser.last_name} has been created  moft_db!!`;
                 //postgresql.consolePrinter(response,1,question);
                 (response) ? resolve(response):reject(false);
             }); 
+        })     
     },
-    updateUser : (id)=>{
+    updateUser : (user)=>{
+        return new Promise((resolve, reject) => {
         let query = `Update 
         users
          set 
-         first_name = '${user.first_name}', 
-         last_name = '${user.last_name}' ,
-         email = '${user.email}',
-          profile_path = '${user.profile_path}', 
-          token = '${user.token}'
-          where id = ${id} `;
+         first_name = '${user.user.ofa}', 
+         last_name = '${user.user.wea}',
+          profile_path = '${user.user.Paa}', 
+          token = '${user.auth.id_token}'
+          where email = '${user.user.U3}' `;
           db.exec(query,  function(response){
-            let question = `The User ${user.first_name} ${iser.last_name} has been updated  moft_db!!`;
+            //let question = `The User ${user.first_name} ${user.last_name} has been updated  moft_db!!`;
                  //postgresql.consolePrinter(response,1,question);
                  (response) ? resolve(response):reject(false);
              }); 
-         
+            })     
         
     },
-    deletetUser : (id)=>{
-                  let query =`Delete * from users where id='${id}'`;
+    deletetUser : (email)=>{
+                  let query =`Delete * from users where email='${email}'`;
                   db.exec(query,  function(response){
                     let question = `The Users with the id  ${id} has been removed!!`;
                          //postgresql.consolePrinter(response,1,question);

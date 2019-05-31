@@ -28,13 +28,29 @@ router.post('/tokensigninonserver', function(req, res, next) {
   //Verificar q l user is on db and after update, if not create it!!!!!!
   
   postgres.findUser(req.body.user.U3).then(function(response ){
-    console.log(response.rows[0].firstname);
-  verify(req.body.auth.id_token).
-    then((resp)=>{
+    if(response.rows.length > 0){
+      console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
+      if(response.rows[0].email != req.body.user.U3){
+      postgres.updateUser(req.body).then((rest)=>{
+        verify(req.body.auth.id_token).
+        then((resp)=>{
+          console.info(resp);
+          res.send(response.rows[0].email).end();  
+        }).catch(console.error);
+      }
+      ).catch(err=>console.error(err));
+    }
+    res.send(response.rows[0].email).end(); 
+    }
+    else{
+      postgres.createUser(req.body).then((respn)=>{
+        console.info(respn);
+      verify(req.body.auth.id_token).then((resp)=>{
       console.info(resp);
       res.send(response.rows[0].email).end();  
     }).catch(console.error);
-  
+      }).catch(console.error);
+    }
   })
   .catch(err=>console.error(err));
  
