@@ -15,7 +15,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   
       // Request headers you wish to allow
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Accept, x-token, X-Key,application/json,formdata');
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-type,Accept, x-token, X-Key,application/json');
   
       // Set to true if you need the website to include cookies in the requests sent
       // to the API (e.g. in case you use sessions)
@@ -23,22 +23,23 @@ router.post('/tokensigninonserver', function(req, res, next) {
       //res.header("Access-Control-Allow-Origin", "*");
       //res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
       //res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key,application/json,formdata");
-  console.log(req.body);
+ 
 
-
-  postgres.listUsers().then(function(response ){
-    console.log(response.rows[0]);
-  verify().catch(console.error);
-  res.send('respond with a resource');
-
+  //Verificar q l user is on db and after update, if not create it!!!!!!
+  
+  postgres.findUser(req.body.user.U3).then(function(response ){
+    console.log(response.rows[0].firstname);
+  verify(req.body.auth.id_token).
+    then((resp)=>{
+      console.info(resp);
+      res.send(response.rows[0].email).end();  
+    }).catch(console.error);
+  
   })
   .catch(err=>console.error(err));
  
 
 });
-
-
-
 
 router.get('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
@@ -67,21 +68,24 @@ router.get('/cal', function(req, res){
   };
   res.end('cal.jade', locals);
 });
-async function verify() {
+function verify(token) {
   const {OAuth2Client} = require('google-auth-library');
   const client = new OAuth2Client(process.env.GOOGLE_CID);
-  const ticket = await client.verifyIdToken({
-      idToken: req.token,
-      audience: GOOGLE_CID,  // Specify the CLIENT_ID of the app that accesses the backend
+  client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CID,  // Specify the CLIENT_ID of the app that accesses the backend
       // Or, if multiple clients access the backend:
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-  });
+  }).then((ticket)=>{
+    const payload = ticket.getPayload();
+    const userid = payload['sub'];
+    // If request specified a G Suite domain:
+    //const domain = payload['hd'];
+   console.log(userid);
+  })
+  .catch(error=>console.error(error));;
 
-  const payload = ticket.getPayload();
-  const userid = payload['sub'];
-  // If request specified a G Suite domain:
-  //const domain = payload['hd'];
- 
+  
 
 }
 module.exports = router;

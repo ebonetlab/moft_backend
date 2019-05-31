@@ -11,7 +11,21 @@ let postgresql = {
                  //List all USers from moft_db & moft_user table
                 // let question = `The Users in moft_db are!!`;
                 //postgresql.consolePrinter(response,1,question);
-                resolve(response);
+                (response) ? resolve(response):reject(false);
+            });             
+       
+   
+        })      
+ 
+    },
+    findUser : (email)=>{
+        return new Promise((resolve, reject) => {
+            let query  = `select * from users  where email = '${email}'`;
+            db.exec(query,  function(response){
+                 //List all USers from moft_db & moft_user table
+                // let question = `The Users in moft_db are!!`;
+                //postgresql.consolePrinter(response,1,question);
+                (response) ? resolve(response):reject(false);
             });             
        
    
@@ -24,7 +38,8 @@ let postgresql = {
             VALUES('${user.first_name}','${user.last_name}','${user.email}','${user.profile_path}','${user.token}')`;
             db.exec(query,  function(response){
            let question = `The User ${user.first_name} ${iser.last_name} has been created  moft_db!!`;
-                postgresql.consolePrinter(response,1,question);
+                //postgresql.consolePrinter(response,1,question);
+                (response) ? resolve(response):reject(false);
             }); 
     },
     updateUser : (id)=>{
@@ -39,7 +54,8 @@ let postgresql = {
           where id = ${id} `;
           db.exec(query,  function(response){
             let question = `The User ${user.first_name} ${iser.last_name} has been updated  moft_db!!`;
-                 postgresql.consolePrinter(response,1,question);
+                 //postgresql.consolePrinter(response,1,question);
+                 (response) ? resolve(response):reject(false);
              }); 
          
         
@@ -48,7 +64,8 @@ let postgresql = {
                   let query =`Delete * from users where id='${id}'`;
                   db.exec(query,  function(response){
                     let question = `The Users with the id  ${id} has been removed!!`;
-                         postgresql.consolePrinter(response,1,question);
+                         //postgresql.consolePrinter(response,1,question);
+                         (response) ? resolve(response):reject(false);
                      }); 
        
     },
