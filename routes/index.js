@@ -27,4 +27,15 @@ router.post('/', function(req, res, next) {
       }
   });
 
+  router.get('/cal', function(req, res){
+    var locals = {
+      title: "These are your calendars",
+      user: my_profile.name,
+      bday: my_profile.birthday,
+      events: my_calendars,
+      email: my_email
+    };
+    res.end('cal.jade', locals);
+  });
+
 module.exports = router;
