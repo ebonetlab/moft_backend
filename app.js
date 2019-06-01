@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.all('/*', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://moft.eabonet.com");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
   if (req.method == 'OPTIONS') {
