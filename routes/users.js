@@ -6,7 +6,31 @@ gapi = require('../lib/gapi');
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
-
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('users', { title: 'Moft Users' });
+  res.header("Access-Control-Allow-Origin", "*");
+  //res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
+      if (req.method == 'OPTIONS') {
+        res.status(200).end();
+    
+    } else {
+        next();
+    }
+});
+router.post('/', function(req, res, next) {
+    res.render('users', { title: 'Moft Users' });
+    res.header("Access-Control-Allow-Origin", "*");
+    //res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
+        if (req.method == 'OPTIONS') {
+          res.status(200).end();
+      
+      } else {
+          next();
+      }
+  });
 router.post('/tokensigninonserver', function(req, res, next) {
       // Website you wish to allow to connect
       //res.setHeader('Access-Control-Allow-Origin', 'https://moft.eabonet.com');
