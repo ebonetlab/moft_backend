@@ -3,7 +3,7 @@ const jwtStrategy = require('passport-jwt').Strategy;
 const jwt = require('jsonwebtoken');
 const ExtractJWT = jwtStrategy.ExtractJwt;
 const postgresql = require('../middleware/database.js');
-const validateReq = require('../middleware/validateREquest');
+//const validateReq = require('../middleware/validateREquest');
 const error = require('../logs/error.log');
 const config = require('../config/config.json');
 
