@@ -45,7 +45,42 @@ router.post('/tokensigninonserver', function(req, res, next) {
     }
   })
   .catch(err=>console.error(err));
- 
+
+});
+
+router.post('/facesignin', function(req, res, next) {
+
+  postgres.findUser(req.body.user.U3).then(function(response ){
+    if(response.rows.length > 0){
+      console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
+      if(response.rows[0].email != req.body.user.U3){
+      postgres.updateUser(req.body).then((rest)=>{
+        console.log(rest);
+        verify(req.body.auth.id_token).then((resp)=>{
+          console.info(resp);
+          res.send(response.rows[0].email).end();  
+        }).catch(err=>console.error(err));
+
+      }).catch(err=>console.error(err));
+     }
+     else{
+      verify(req.body.auth.id_token).then((resp)=>{
+        console.info(resp);
+        res.send(response.rows[0].email).end();  
+      }).catch(err=>console.error(err));
+     }
+    }
+     else{
+      postgres.createUser(req.body).then((respn)=>{
+        console.info(respn);
+      verify(req.body.auth.id_token).then((resp)=>{
+      console.info(resp);
+      res.send(response.rows[0].email).end();  
+    }).catch(console.error);
+      }).catch(console.error);
+    }
+  })
+  .catch(err=>console.error(err));
 
 });
 
