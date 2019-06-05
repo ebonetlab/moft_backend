@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router(),
 postgres = require('../middleware/model'),
-auth = require('./auth');
+//auth = require('./auth');
 gapi = require('../lib/gapi');
 
 
