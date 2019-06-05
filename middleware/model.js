@@ -7,6 +7,7 @@ let postgresql = {
      listUsers : ()=>{
         return new Promise((resolve, reject) => {
             let query  = `select * from users order by first_name DESC`;
+            console.log('Executed List User function ');
             db.exec(query,  function(response){
                  //List all USers from moft_db & moft_user table
                 // let question = `The Users in moft_db are!!`;
@@ -19,6 +20,7 @@ let postgresql = {
  
     },
     findUser : (email)=>{
+        console.log('Executed findUser function ' + email);
         return new Promise((resolve, reject) => {
             let query  = `select * from users  where email = '${email}'`;
             db.exec(query,  function(response){
@@ -35,6 +37,7 @@ let postgresql = {
     createUser : (user)=>{
         return new Promise((resolve, reject) => {
          //Create an User @ moft_user table
+         console.log('Executed createUser function ' + user)
             let query = `Insert into users (first_name,last_name,email, profile_path, token) 
             VALUES('${user.user.ofa}','${user.user.wea}','${user.user.U3}','${user.user.Paa}','${user.auth.id_token}')`;
             db.exec(query,  function(response){
@@ -54,6 +57,7 @@ let postgresql = {
           profile_path = '${user.user.Paa}', 
           token = '${user.auth.id_token}'
           where email = '${user.user.U3}' `;
+          console.log('Executed UpdatedUser function ' + email);
           db.exec(query,  function(response){
             //let question = `The User ${user.first_name} ${user.last_name} has been updated  moft_db!!`;
                  //postgresql.consolePrinter(response,1,question);
@@ -64,6 +68,7 @@ let postgresql = {
     },
     deletetUser : (email)=>{
                   let query =`Delete * from users where email='${email}'`;
+                  console.log('Executed UpdatedUser function ' + email);
                   db.exec(query,  function(response){
                     let question = `The Users with the id  ${id} has been removed!!`;
                          //postgresql.consolePrinter(response,1,question);
