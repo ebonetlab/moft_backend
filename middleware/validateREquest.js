@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-//const auth = require('../routes/auth');
-//const config = require('../config')
+const auth = require('../routes/auth');
+const config = require('../config/config.json')
 
 module.exports = function (req, res, next) {
     var token = (req.body && req.body.token) || (req.query && req.query.token) || req.headers['x-token'];

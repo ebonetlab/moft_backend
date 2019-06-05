@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router(),
 postgres = require('../middleware/model'),
+auth = require('./auth');
 gapi = require('../lib/gapi');
+
 
  /*GET home page. */
 /*router.get('/users', function(req, res, next) {
@@ -33,6 +35,12 @@ router.post('/tokensigninonserver', function(req, res, next) {
 
       }).catch(err=>console.error(err));
        }
+       else{
+        verify(req.body.auth.id_token).then((resp)=>{
+          console.info(resp);
+          res.send(response.rows[0].email).end();  
+        }).catch(err=>console.error(err));
+       }
     }
      else{
       postgres.createUser(req.body).then((respn)=>{
@@ -47,7 +55,11 @@ router.post('/tokensigninonserver', function(req, res, next) {
   .catch(err=>console.error(err));
 
 });
+router.post('/singlesignin', function(req, res, next) {
 
+auth.validateUser();
+
+});
 router.post('/facesignin', function(req, res, next) {
 
   postgres.findUser(req.body.user.U3).then(function(response ){
