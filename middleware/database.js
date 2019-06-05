@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const {Pool} = require('pg');
 const config = require('../config/config.json');
 const logging = require('./logging.js');
-let connexion = (process.platform == 'win32')  ? config.remote_home : config.local;
+let connexion = (process.platform == 'win32')  ? config.local : config.production;
 const pool = new Pool(connexion);
 var db = module.exports = {
     exec: function (query, callback) {
