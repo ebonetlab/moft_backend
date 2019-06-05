@@ -38,11 +38,9 @@ router.post('/tokensigninonserver', function(req, res, next) {
       }).catch(err=>console.error(err));
        }
        else{
-        verify(req.body.auth.id_token).then((resp)=>{
-          console.info(resp);
-          
+               
           res.send(response.rows[0].email).end();  
-        }).catch(err=>console.error(err));
+     
        }
     }
      else{
@@ -54,7 +52,10 @@ router.post('/tokensigninonserver', function(req, res, next) {
     }).catch(console.error);
       }).catch(console.error);
     }
-  }).catch(err=>console.error(err));
+  }).catch(
+    err=>{console.error(err)
+    }
+    );
 
 });
 router.post('/singlesignin', function(req, res, next) {
