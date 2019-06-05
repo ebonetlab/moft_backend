@@ -20,7 +20,6 @@ gapi = require('../lib/gapi');
 });*/
 
 router.post('/tokensigninonserver', function(req, res, next) {
- console.markTimeline('start');
  console.info(`New request by ${req.body.user.ig}`);
  
   postgres.findUser(req.body.user.U3).then(function(response ){
@@ -32,7 +31,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
         console.log(rest);
         verify(req.body.auth.id_token).then((resp)=>{
           console.info(resp);
-          console.markTimeline('end');
+      
           res.send(response.rows[0].email).end();  
         }).catch(err=>console.error(err));
 
@@ -41,7 +40,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
        else{
         verify(req.body.auth.id_token).then((resp)=>{
           console.info(resp);
-          console.markTimeline('end');
+          
           res.send(response.rows[0].email).end();  
         }).catch(err=>console.error(err));
        }
