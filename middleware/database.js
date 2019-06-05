@@ -10,7 +10,7 @@ var db = module.exports = {
             if (err) {
                 console.log(query);
                 logging.write("./logs/database_error.log", err);
-                db.error(req, err);
+                db.error(query, err);
                 if (connexion) {connexion.destroy();}
                 console.error(`Error conecting to ${connexion.database}`, err.stack)
                 callback(false, err);
