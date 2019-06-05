@@ -2,12 +2,9 @@ var express = require('express');
 var router = express.Router(),
 postgres = require('../middleware/model'),
 gapi = require('../lib/gapi');
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-/* GET home page. */
-router.get('/', function(req, res, next) {
+
+ /*GET home page. */
+/*router.get('/users', function(req, res, next) {
   res.render('users', { title: 'Moft Users' });
   res.header("Access-Control-Allow-Origin", "*");
   //res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
@@ -18,30 +15,10 @@ router.get('/', function(req, res, next) {
     } else {
         next();
     }
-});
-router.post('/', function(req, res, next) {
-    res.render('users', { title: 'Moft Users' });
-    res.header("Access-Control-Allow-Origin", "*");
-    //res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
-        if (req.method == 'OPTIONS') {
-          res.status(200).end();
-      
-      } else {
-          next();
-      }
-  });
-router.post('/tokensigninonserver', function(req, res, next) {
-      // Website you wish to allow to connect
-      //res.setHeader('Access-Control-Allow-Origin', 'https://moft.eabonet.com');
+});*/
 
-      // Request methods you wish to allow
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  
-      // Request headers you wish to allow
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-type,Accept, x-token, X-Key,application/json');
- 
-  
+router.post('/tokensigninonserver', function(req, res, next) {
+
   postgres.findUser(req.body.user.U3).then(function(response ){
     if(response.rows.length > 0){
       console.log(response.rows[0].first_name +''+ response.rows[0].last_name);

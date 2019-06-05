@@ -7,8 +7,6 @@ const bodyParser = require('body-parser');
 var logger = require('morgan'),
 path = require('path'),
 http = require('http');
-//https = require('https');
-
 
 //app.all('*', [require('./middleware/validateRequest')]);
 
@@ -26,7 +24,7 @@ app.set('port', process.env.PORT || 5000);
 
 app.use(logger('dev'));
 app.use(express.json());
-//app.use(cors({origin: 'https://moft.eabonet.com'}));
+app.use(cors({origin: 'https://moft.eabonet.com'}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -35,19 +33,21 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json());
 
+
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
 app.all('/*', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
   if (req.method == 'OPTIONS') {
       res.status(200).end();
   } else {
       next();
   }
 });
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
