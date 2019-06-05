@@ -20,6 +20,8 @@ gapi = require('../lib/gapi');
 });*/
 
 router.post('/tokensigninonserver', function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "PUT, POST, OPTIONS");
  console.info(`New request by ${req.body.user.ig}`);
  
   postgres.findUser(req.body.user.U3).then(function(response ){
