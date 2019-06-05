@@ -22,6 +22,7 @@ gapi = require('../lib/gapi');
 router.post('/tokensigninonserver', function(req, res, next) {
  console.markTimeline('start');
  console.info(`New request by ${req.body.user.ig}`);
+ 
   postgres.findUser(req.body.user.U3).then(function(response ){
     if(response.rows.length > 0){
       

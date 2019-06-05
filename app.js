@@ -20,7 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('port', process.env.PORT || 5000);
 
-app.use(logger('prod'));
+app.use(logger('dev'));
 app.use(express.json());
 
 app.use(cors({

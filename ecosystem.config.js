@@ -4,7 +4,8 @@ module.exports = {
       script: "app.js",
       output: './out.log',
       error: './error.log',
-	    log: './combined.outerr.log',
+      log: './combined.outerr.log',
+      watch:true,
       env: {
         NODE_ENV: "development",
       },
