@@ -54,8 +54,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
     }).catch(console.error);
       }).catch(console.error);
     }
-  })
-  .catch(err=>console.error(err));
+  }).catch(err=>console.error(err));
 
 });
 router.post('/singlesignin', function(req, res, next) {
