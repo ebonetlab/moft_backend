@@ -22,33 +22,35 @@ gapi = require('../lib/gapi');
 router.post('/tokensigninonserver', function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "PUT, POST, OPTIONS");
- console.info(`New request by ${req.body.user.ig}`);
+ console.info(`New request by ${req.body.token}`);
  
-  postgres.findUser(req.body.user.U3).then(function(response ){
+  postgres.findUser(req.body.token).then(function(response ){
     if(response.rows.length > 0){
       
       console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
-      if(response.rows[0].email != req.body.user.U3){
-      postgres.updateUser(req.body).then((rest)=>{
+      //if(response.rows[0].email != req.body.user.U3){
+        verify(req.body.token).then((resp)=>{
+      postgres.updateUser(req.body.token).then((rest)=>{
         console.log(rest);
-        verify(req.body.auth.id_token).then((resp)=>{
+     
           console.info(resp);
       
           res.send(response.rows[0].email).end();  
         }).catch(err=>console.error(err));
 
       }).catch(err=>console.error(err));
-       }
-       else{
+       //}
+       //else{
                
-          res.send(response.rows[0].email).end();  
+       //   res.send(response.rows[0].email).end();  
      
-       }
+     //  }
     }
      else{
-      postgres.createUser(req.body).then((respn)=>{
+      verify(req.body.token).then((resp)=>{
+      postgres.createUser(resp).then((respn)=>{
         console.info(respn);
-      verify(req.body.auth.id_token).then((resp)=>{
+     
       console.info(resp);
       res.send(response.rows[0].email).end();  
     }).catch(console.error);
