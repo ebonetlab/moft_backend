@@ -20,8 +20,10 @@ gapi = require('../lib/gapi');
 });*/
 
 router.post('/tokensigninonserver', function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  /*res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "PUT, POST, OPTIONS");
+  res.setHeader( 'Access-Control-Allow-Credentials', true);
+  res.setHeader("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");*/
  console.info(`New request by ${req.body.token}`);
  
   postgres.findUser(req.body.token).then(function(response ){
@@ -148,7 +150,12 @@ function verify(token) {
    console.info('Domain: If request specified a G Suite domain ' + domain);
    (userid) ? resolve(true) :reject(false) ;
   })
-  .catch(error=>console.error(error));;
+  .catch(
+    error=>
+    {
+      console.error(error)
+    }
+    );
   });
   }
 module.exports = router;
