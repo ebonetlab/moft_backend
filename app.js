@@ -1,3 +1,13 @@
+const io = require('@pm2/io')
+
+io.init({
+  metrics: {
+    network: {
+      ports: true
+    }
+  }
+});
+
 var createError = require('http-errors');
 var express = require('express');
 var cors = require('cors');
