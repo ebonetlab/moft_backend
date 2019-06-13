@@ -22,49 +22,41 @@ gapi = require('../lib/gapi');
 router.post('/tokensigninonserver', function(req, res, next) {
 
  console.info(`New request by ${req.body.token}`);
- 
+ verify(req.body.token).then((resp)=>{
+   if(resp){
   postgres.findUser(req.body.token).then(function(response ){
-    if(response.rows.length > 0){
-      
+    if(response.rows.length > 0){   
       console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
-      //if(response.rows[0].email != req.body.user.U3){
-        verify(req.body.token).then((resp)=>{
       postgres.updateUser(req.body.token).then((rest)=>{
         console.log(rest);
-     
-          console.info(resp);
-      
           res.send(response.rows[0].email).end();  
-        }).catch(err=>console.error(err));
-
-      }).catch(err=>console.error(err));
-       //}
-       //else{
-               
-       //   res.send(response.rows[0].email).end();  
-     
-     //  }
+        }).catch(err=>{
+          console.error(err);
+          res.send(err).end();
+        });
     }
-     else{
-      verify(req.body.token).then((resp)=>{
+    else{
+      
       postgres.createUser(resp).then((respn)=>{
-        console.info(respn);
-     
-      console.info(resp);
+      console.info(respn);
       res.send(response.rows[0].email).end();  
-    }).catch(console.error);
-      }).catch(console.error);
-    }
-  }).catch(
-    err=>{console.error(err)
-    }
-    );
-
+      }).
+      catch(
+        err=>{
+          console.error(err);
+          res.send(err).end();
+        });
+      }
+  });
+}
+  }).
+  catch(err=>{
+    console.error(err);
+    res.send(JSON.stringify(err.message)).end();
+  });
 });
 router.post('/singlesignin', function(req, res, next) {
-
 auth.validateUser();
-
 });
 router.post('/facesignin', function(req, res, next) {
 
@@ -101,7 +93,6 @@ router.post('/facesignin', function(req, res, next) {
   .catch(err=>console.error(err));
 
 });
-
 router.get('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
   
@@ -118,7 +109,6 @@ router.get('/oauth2callback', function(req, res, next) {
       next();
  
 });
-
 router.get('/cal', function(req, res){
   var locals = {
     title: "These are your calendars",
@@ -150,7 +140,8 @@ function verify(token) {
   .catch(
     error=>
     {
-      console.error(error)
+      console.error(error);
+      reject(error);
     }
     );
   });

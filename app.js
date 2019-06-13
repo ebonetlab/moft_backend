@@ -47,18 +47,21 @@ var corsOptions = {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
-    }
+    },
+     methods: ["POST, GET"],
+    maxAge: 3600,
+    
   }
 }*/
 
 
 
 app.all('/*',cors(), function (req, res, next) {
-  console.log('Arrive ' + req.body)
-  //res.header("Access-Control-Allow-Origin", "https://moft.eabonet.com");
+  console.log('Arrived')
+  /*res.header("Access-Control-Allow-Origin", "https://moft.eabonet.com");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key,Origin, X-Requested-With");
-  res.header( 'Access-Control-Allow-Credentials', true);
+  res.header( 'Access-Control-Allow-Credentials', true);*/
   if (req.method == 'OPTIONS') {
       res.status(200).end();
   } else {
