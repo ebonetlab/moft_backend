@@ -23,7 +23,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
 
  console.info(`New request by ${req.body.token}`);
  verify(req.body.token).then((resp)=>{
-   console.log('Verify ' + response );
+   console.log('Verify ' + resp);
    if(resp){
   postgres.findUser(req.body.token).then(function(response ){
     if(response){
