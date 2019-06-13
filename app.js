@@ -17,7 +17,7 @@ const bodyParser = require('body-parser');
 var logger = require('morgan'),
 path = require('path'),
 http = require('http');
-let allowedOrigins = ['https://moft.eabonet.com, https://moft.eabonet.com/users/tokensigninonserver, http://localhost:5000','https://ad.acslabtest.com'];
+let allowedOrigins = ['https://moft.eabonet.com'];
 //app.all('*', [require('./middleware/validateRequest')]);
 
 var indexRouter = require('./routes/index');
@@ -54,22 +54,23 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json());
 
+p
 
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 app.all('/*', function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
-  res.setHeader( 'Access-Control-Allow-Credentials', true);
+  res.header("Access-Control-Allow-Origin", "https://moft.eabonet.com");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key,Origin, X-Requested-With");
+  res.header( 'Access-Control-Allow-Credentials', true);
   if (req.method == 'OPTIONS') {
       res.status(200).end();
   } else {
       next();
   }
 });
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
