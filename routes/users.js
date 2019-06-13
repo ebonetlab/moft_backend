@@ -23,6 +23,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
 
  console.info(`New request by ${req.body.token}`);
  verify(req.body.token).then((resp)=>{
+   console.log('Verify ' + response );
    if(resp){
   postgres.findUser(req.body.token).then(function(response ){
     if(response){
@@ -37,7 +38,6 @@ router.post('/tokensigninonserver', function(req, res, next) {
         });
     }
     else{
-      
       postgres.createUser(resp).then((respn)=>{
       console.info(respn);
       res.send(response.rows[0].email).end();  
