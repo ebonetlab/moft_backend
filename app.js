@@ -32,8 +32,8 @@ app.set('port', process.env.PORT || 5000);
 
 app.use(logger('dev'));
 app.use(express.json());
-
-app.use(cors({
+app.use(cors());
+/*app.use(cors({
   origin: function(origin, callback){
     // allow requests with no origin 
     // (like mobile apps or curl requests)
@@ -45,7 +45,7 @@ app.use(cors({
     }
     return callback(null, true);
   }
-}));
+}));*/
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,7 +59,8 @@ p
 
 
 app.all('/*', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://moft.eabonet.com");
+  console.log('Arrive ' + req.body)
+  //res.header("Access-Control-Allow-Origin", "https://moft.eabonet.com");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key,Origin, X-Requested-With");
   res.header( 'Access-Control-Allow-Credentials', true);
