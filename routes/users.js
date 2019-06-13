@@ -27,6 +27,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
    if(resp){
   postgres.findUser(req.body.token).then(function(response ){
     if(response){
+      console.info('Rows' + response.rows.length);
     if(response.rows.length > 0){   
       console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
       postgres.updateUser(req.body.token).then((rest)=>{
@@ -38,15 +39,16 @@ router.post('/tokensigninonserver', function(req, res, next) {
         });
     }
     else{
-      postgres.createUser(resp).then((respn)=>{
+      /*postgres.createUser(resp).then((respn)=>{
       console.info(respn);
       res.send(response.rows[0].email).end();  
-      }).
-      catch(
+      }).catch(
         err=>{
           console.error(err);
           res.send(err).end();
-        });
+        });*/
+        console.log(response);
+        res.send(JSON.stringify(response)).end();
       }
     }
     else{
