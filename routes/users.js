@@ -25,6 +25,7 @@ router.post('/tokensigninonserver', function(req, res, next) {
  verify(req.body.token).then((resp)=>{
    if(resp){
   postgres.findUser(req.body.token).then(function(response ){
+    if(response){
     if(response.rows.length > 0){   
       console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
       postgres.updateUser(req.body.token).then((rest)=>{
@@ -47,6 +48,12 @@ router.post('/tokensigninonserver', function(req, res, next) {
           res.send(err).end();
         });
       }
+    }
+    else{
+      console.log(response);
+      res.send(JSON.stringify(response)).end();
+    }
+
   });
 }
   }).
