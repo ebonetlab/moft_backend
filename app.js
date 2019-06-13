@@ -17,7 +17,7 @@ const bodyParser = require('body-parser');
 var logger = require('morgan'),
 path = require('path'),
 http = require('http');
-let allowedOrigins = ['https://moft.eabonet.com'];
+
 //app.all('*', [require('./middleware/validateRequest')]);
 
 var indexRouter = require('./routes/index');
@@ -32,20 +32,7 @@ app.set('port', process.env.PORT || 5000);
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(cors());
-/*app.use(cors({
-  origin: function(origin, callback){
-    // allow requests with no origin 
-    // (like mobile apps or curl requests)
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));*/
+
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,12 +40,20 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(bodyParser.json());
+/*let allowedOrigins = ['https://moft.eabonet.com'];
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}*/
 
-p
 
 
-
-app.all('/*', function (req, res, next) {
+app.all('/*',cors(), function (req, res, next) {
   console.log('Arrive ' + req.body)
   //res.header("Access-Control-Allow-Origin", "https://moft.eabonet.com");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
