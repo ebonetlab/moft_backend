@@ -19,10 +19,10 @@ let postgresql = {
         })      
  
     },
-    findUser : (token)=>{
-        console.log('Executed findUser function ' + token);
+    findUser : (payload)=>{
+        console.log('Executed findUser function ' + payload.name);
         return new Promise((resolve, reject) => {
-            let query  = `select * from users  where token like  '%${token}%'`;
+            let query  = `select * from users  where email =  '${payload.email}'`;
             db.exec(query,  function(response){
                  //List all USers from moft_db & moft_user table
                 // let question = `The Users in moft_db are!!`;
@@ -47,7 +47,7 @@ let postgresql = {
             }); 
         })     
     },
-    updateUser : (token)=>{
+    updateUser : (user)=>{
 
         /*let query = `Update 
         users
@@ -62,8 +62,8 @@ let postgresql = {
         let query = `Update 
         users
          set 
-         token = '${token}'
-          where token = '${token}' `;
+         token = '${user.token}'
+          where email = '${user.email}' `;
           console.log('Executed UpdatedUser function ');
           db.exec(query,  function(response){
             //let question = `The User ${user.first_name} ${user.last_name} has been updated  moft_db!!`;

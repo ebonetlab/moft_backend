@@ -23,13 +23,14 @@ router.post('/tokensigninonserver', function(req, res, next) {
 
  console.info(`New request by ${req.body.token}`);
  verify(req.body.token).then((resp)=>{
-   console.log('Verify ' + resp);
+   console.log('Verify ' + resp.name);
    if(resp){
-  postgres.findUser(req.body.token).then(function(response ){
+  postgres.findUser(resp).then(function(response ){
     if(response){
       console.info('Rows' + response.rows.length);
     if(response.rows.length > 0){   
       console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
+      if(!resp.email_verified){
       postgres.updateUser(req.body.token).then((rest)=>{
         console.log(rest);
           res.send(response.rows[0].email).end();  
@@ -37,16 +38,18 @@ router.post('/tokensigninonserver', function(req, res, next) {
           console.error(err);
           res.send(err).end();
         });
+      }
+        res.send(response.rows[0].email).end();  
     }
     else{
-      /*postgres.createUser(resp).then((respn)=>{
+      postgres.createUser(resp).then((respn)=>{
       console.info(respn);
       res.send(response.rows[0].email).end();  
       }).catch(
         err=>{
           console.error(err);
           res.send(err).end();
-        });*/
+        });
         console.log(response);
         res.send(JSON.stringify(response)).end();
       }
@@ -144,7 +147,7 @@ function verify(token) {
     const domain = payload['hd'];
    console.log('G. userid' + userid );
    console.info('Domain: If request specified a G Suite domain ' + domain);
-   (userid) ? resolve(true) :reject(false) ;
+   (userid) ? resolve(payload) :reject(false) ;
   })
   .catch(
     error=>
