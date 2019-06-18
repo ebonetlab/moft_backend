@@ -38,7 +38,7 @@ let postgresql = {
 
     },
     findSingleUser : (username, token)=>{
-        console.log('Executed findUser function ' + payload.name);
+        console.log('Executed findUser function ' + username);
         return new Promise((resolve, reject) => {
             let query  = `select * from users  where email = '${username}' single_token like '%${token}%'`;
             db.exec(query,  function(response){

@@ -16,7 +16,6 @@ var auth = {
             });
             return;
         }
-          req.body.name = req.body.username;
           let token = bcrypt(req.body.password);
             postgresql.findSingleUser(req.body.username, token).then(user=>{
                 if (!user) {
