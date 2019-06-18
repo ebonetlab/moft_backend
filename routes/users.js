@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router(),
+let express = require('express'),
+ router = express.Router(),
 postgres = require('../middleware/model'),
-//auth = require('./auth');
-gapi = require('../lib/gapi');
+auth = require('./auth');
+gapi = require('../lib/gapi'),
 
 
  /*GET home page. */
@@ -33,12 +33,15 @@ router.post('/tokensigninonserver', function(req, res, next) {
       if(!resp.email_verified){
       postgres.updateUser(req.body.token).then((rest)=>{
         console.log(rest);
+          postgresql.createLog('/login.amp.html with Google ' + resp.email);
           res.send(response.rows[0].email).end();  
+
         }).catch(err=>{
           console.error(err);
           res.send(err).end();
         });
       }
+      postgresql.createLog('/login.amp.html with Google ' + resp.email);
         res.send(response.rows[0].email).end();  
     }
     else{
@@ -51,11 +54,13 @@ router.post('/tokensigninonserver', function(req, res, next) {
           res.send(err).end();
         });
         console.log(response);
+        postgresql.createLog('/login.amp.html with Google ' + resp.email);
         res.send(JSON.stringify(response)).end();
       }
     }
     else{
       console.log(response);
+      postgresql.createLog('/login.amp.html with Google ' + resp.email);
       res.send(JSON.stringify(response)).end();
     }
 
@@ -66,10 +71,15 @@ router.post('/tokensigninonserver', function(req, res, next) {
     console.error(err);
     res.send(JSON.stringify(err.message)).end();
   });
+  next();
 });
+
 router.post('/singlesignin', function(req, res, next) {
-auth.validateUser();
+auth.login(req,res);
+next();
 });
+
+// To do
 router.post('/facesignin', function(req, res, next) {
 
   postgres.findUser(req.body.user.U3).then(function(response ){
@@ -103,8 +113,9 @@ router.post('/facesignin', function(req, res, next) {
     }
   })
   .catch(err=>console.error(err));
-
+next();
 });
+
 router.get('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
   
@@ -121,6 +132,7 @@ router.get('/oauth2callback', function(req, res, next) {
       next();
  
 });
+
 router.get('/cal', function(req, res){
   var locals = {
     title: "These are your calendars",
@@ -131,6 +143,7 @@ router.get('/cal', function(req, res){
   };
   res.end('cal.jade', locals);
 });
+
 function verify(token) {
   const {OAuth2Client} = require('google-auth-library');
   const client = new OAuth2Client(process.env.GOOGLE_CID);

@@ -10,6 +10,7 @@ io.init({
 
 var createError = require('http-errors');
 var express = require('express');
+var session = require('cookie-session')
 var cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -75,6 +76,12 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+app.use(session({
+  secret: 'Login Session',
+  resave: true,
+  saveUninitialized: false
+}));
 
 // error handler
 app.use(function(err, req, res, next) {

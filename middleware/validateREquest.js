@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
                 return;
             }
 
-            auth.validateUser(decoded, function (user) {
+            auth.login(decoded, function (user) {
                 if (user) {
                     if (req.url.indexOf('admin') >= 0 && user.memberOf.indexOf('admin') || req.url.indexOf('admin') < 0 && req.url.indexOf('/api/v1/') >= 0) {
 

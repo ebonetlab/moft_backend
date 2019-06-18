@@ -19,14 +19,44 @@ let postgresql = {
         })      
  
     },
+    getdate: function () {
+        var date = new Date();
+        var d = date.getFullYear()+"-"+((date.getMonth() < 10) ? "0"+date.getMonth() : date.getMonth())+"-"+((date.getDate() < 10) ? "0"+date.getDate() : date.getDate())+" "+date.getHours()+":"+date.getMinutes()+":"+((date.getSeconds()<10) ? "0"+date.getSeconds() : date.getSeconds());
+        return d;
+    },
+    updateLastLogin :(email)=>{
+        console.log('Executed updateLastLogin function for ' + email);
+        return new Promise((resolve, reject) => {
+            let query  = `Update users set updated_at = '${postgresql.getdate()}' from users  where email =  '${email}'`;
+            db.exec(query,  function(response){
+ 
+                (response) ? resolve(response):reject(false);
+            });             
+       
+   
+        })  
+
+    },
+    findSingleUser : (username, token)=>{
+        console.log('Executed findUser function ' + payload.name);
+        return new Promise((resolve, reject) => {
+            let query  = `select * from users  where email = '${username}' single_token like '%${token}%'`;
+            db.exec(query,  function(response){
+ 
+                (response) ? resolve(response):reject(false);
+            });             
+       
+   
+        })      
+ 
+    }
+    ,
     findUser : (payload)=>{
         console.log('Executed findUser function ' + payload.name);
         return new Promise((resolve, reject) => {
             let query  = `select * from users  where email =  '${payload.email}'`;
             db.exec(query,  function(response){
-                 //List all USers from moft_db & moft_user table
-                // let question = `The Users in moft_db are!!`;
-                //postgresql.consolePrinter(response,1,question);
+ 
                 (response) ? resolve(response):reject(false);
             });             
        
@@ -38,31 +68,44 @@ let postgresql = {
         return new Promise((resolve, reject) => {
          //Create an User @ moft_user table
          console.log('Executed createUser function ' + user)
-            let query = `Insert into users (first_name,last_name,email, profile_path, token) 
+            let query = `Insert into users (first_name,last_name,email, profile_path, gtoken) 
             VALUES('${user.user.ofa}','${user.user.wea}','${user.user.U3}','${user.user.Paa}','${user.auth.id_token}')`;
             db.exec(query,  function(response){
-           //let question = `The User ${user.first_name} ${iser.last_name} has been created  moft_db!!`;
-                //postgresql.consolePrinter(response,1,question);
+   
                 (response) ? resolve(response):reject(false);
             }); 
         })     
     },
-    updateUser : (user)=>{
-
-        /*let query = `Update 
-        users
-         set 
-         first_name = '${user.user.ofa}', 
-         last_name = '${user.user.wea}',
-          profile_path = '${user.user.Paa}', 
-          token = '${user.auth.id_token}'
-          where email = '${user.user.U3}' `;*/
-
+    createSingleUser : (user)=>{
+        return new Promise((resolve, reject) => {
+         //Create an User @ moft_user table
+         console.log('Executed create Single User function ' + user)
+            let query = `Insert into users (first_name,last_name,email, profile_path, single_token) 
+            VALUES('${user.first_name}','${user.user.wea}','${user.last_name}','${user.email}','${user.token}')`;
+            db.exec(query,  function(response){
+   
+                (response) ? resolve(response):reject(false);
+            }); 
+        })     
+    },
+    createLog: (action)=>{
+        return new Promise((resolve, reject) => {
+            //Create a log entry @ moft_logs table
+   db.exec(`INSERT INTO logs(action, created_at) VALUES ('${action})',CURRENT_TIMESTAMP)`, null, function (r) {
+        console.info(r);
+        (response) ? resolve(response):reject(false);
+    }); 
+})  
+      
+ 
+},
+   updateUser : (user)=>{
         return new Promise((resolve, reject) => {
         let query = `Update 
         users
          set 
-         token = '${user.token}'
+         gtoken = '${user.token}',
+         updated_at = CURRRENT_TIMESTAMP
           where email = '${user.email}' `;
           console.log('Executed UpdatedUser function ');
           db.exec(query,  function(response){
