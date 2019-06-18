@@ -36,21 +36,8 @@ let postgresql = {
    
         })  
 
-    },
-    findSingleUser : (username, token)=>{
-        console.log('Executed findUser function ' + username);
-        return new Promise((resolve, reject) => {
-            let query  = `select * from users  where email = '${username}' and  single_token like '%${token}%'`;
-            db.exec(query,  function(response){
- 
-                (response) ? resolve(response):reject(false);
-            });             
-       
-   
-        })      
- 
     }
-    ,
+     ,
     findUser : (payload)=>{
         console.log('Executed findUser function ' + payload.name);
         return new Promise((resolve, reject) => {
@@ -80,8 +67,8 @@ let postgresql = {
         return new Promise((resolve, reject) => {
          //Create an User @ moft_user table
          console.log('Executed create Single User function ' + user)
-            let query = `Insert into users (first_name,last_name,email, profile_path, single_token) 
-            VALUES('${user.first_name}','${user.user.wea}','${user.last_name}','${user.email}','${user.token}')`;
+            let query = `Insert into users (first_name,last_name,email, single_token) 
+            VALUES('${user.first_name}','${user.last_name}','${user.email}','${user.single_token}')`;
             db.exec(query,  function(response){
    
                 (response) ? resolve(response):reject(false);

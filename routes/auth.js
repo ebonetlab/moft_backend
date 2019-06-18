@@ -18,12 +18,14 @@ var auth = {
             });
             return;
         }
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            if(err)console.error(err);
-            bcrypt.hash(req.body.password, salt, function(err, hash) {
+     
+    
                 if(err)console.error(err);
-                postgresql.findSingleUser(req.body.username, hash).then(user=>{
-                    if (user.rowCount == 0) {
+                req.body.user.email = req.body.username;
+                postgresql.findUser(req.body.user).then(user=>{
+                bcrypt.compare(req.body.password, user.single_token, function(err, res) {     
+                if(err)console.error(err);          
+                    if (!res) {
                         res.status(201).json({
                             status: 401,
                             message: "Invalid credentials"
@@ -34,16 +36,46 @@ var auth = {
                     if(res)console.log(error);
                     
                     postgresql.createLog('/login.amp.html with Single Sign in' + req.body.username).then(response=>{
-                    res.status(201).json(genToken(usr, req.body.password));
+                        console.log(response);
+                    res.status(201).json(usr, req.body.user.single_token);
                     }).catch(error=>console.error(error));
                     })
                     .catch(error=>console.error(error));
                 }).catch(error=>console.error(error));
+            });  
+    
+    },
+    register: function(req,res){
+        if (! (req.body.user.username  && req.body.user.password  &&  req.body.user.first_name && req.body.user.last_name)) {
+            res.status(201).json({
+                status: 401,
+                message: "Invalid credentials"
             });
+            return;
+        }
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            if(err)console.error(err);
+            bcrypt.hash(req.body.user.password, salt, function(err, hash) {
+                if(err)console.error(err);
+                req.body.user.single_token = hash;
+                postgresql.createSingleUser(req.body.user).then(user=>{
+                    if (user.rowCount == 0) {
+                        res.status(201).json({
+                            status: 401,
+                            message: "Invalid credentials"
+                        });
+                        return;
+                    }
+                    
+                    if(res)console.log(error);
+                    postgresql.createLog('Register a Single user' + req.body.user.username).then(response=>{
+                    res.status(201).json(usr, req.body.user.single_token);
+                    }).catch(error=>console.error(error));
+                    })
+                    .catch(error=>console.error(error));
+                }).catch(error=>console.error(error));
+        
         });
-      
-      
-   
 
     }
 }
