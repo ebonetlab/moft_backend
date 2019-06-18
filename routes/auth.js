@@ -4,8 +4,10 @@ const jwt = require('jsonwebtoken');
 const ExtractJWT = jwtStrategy.ExtractJwt;
 const postgresql = require('../middleware/model');
 const error = require('../logs/error.log');
-const config = require('../config/config.json'),
-bcrypt = require('bcrypt');
+const config = require('../config/config.json');
+const  bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 var auth = {
    login: function (req, res) {
@@ -16,24 +18,31 @@ var auth = {
             });
             return;
         }
-          let token = bcrypt(req.body.password);
-            postgresql.findSingleUser(req.body.username, token).then(user=>{
-                if (!user) {
-                    res.status(201).json({
-                        status: 401,
-                        message: "Invalid credentials"
-                    });
-                    return;
-                }
-                postgresql.updateLastLogin(user.email).then(res =>{
-                if(res)console.log(error);
-                
-                postgresql.createLog('/login.amp.html with Single Sign in' + req.body.username).then(response=>{
-                res.status(201).json(genToken(usr, req.body.password));
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            if(err)console.error(err);
+            bcrypt.hash(req.body.password, salt, function(err, hash) {
+                if(err)console.error(err);
+                postgresql.findSingleUser(req.body.username, hash).then(user=>{
+                    if (user.rowCount == 0) {
+                        res.status(201).json({
+                            status: 401,
+                            message: "Invalid credentials"
+                        });
+                        return;
+                    }
+                    postgresql.updateLastLogin(user.rows[0].email).then(res =>{
+                    if(res)console.log(error);
+                    
+                    postgresql.createLog('/login.amp.html with Single Sign in' + req.body.username).then(response=>{
+                    res.status(201).json(genToken(usr, req.body.password));
+                    }).catch(error=>console.error(error));
+                    })
+                    .catch(error=>console.error(error));
                 }).catch(error=>console.error(error));
-                })
-                .catch(error=>console.error(error));
-            }).catch(error=>console.error(error));
+            });
+        });
+      
+      
    
 
     }

@@ -40,7 +40,7 @@ let postgresql = {
     findSingleUser : (username, token)=>{
         console.log('Executed findUser function ' + username);
         return new Promise((resolve, reject) => {
-            let query  = `select * from users  where email = '${username}' single_token like '%${token}%'`;
+            let query  = `select * from users  where email = '${username}' and  single_token like '%${token}%'`;
             db.exec(query,  function(response){
  
                 (response) ? resolve(response):reject(false);
@@ -91,7 +91,7 @@ let postgresql = {
     createLog: (action)=>{
         return new Promise((resolve, reject) => {
             //Create a log entry @ moft_logs table
-   db.exec(`INSERT INTO logs(action, created_at) VALUES ('${action})',CURRENT_TIMESTAMP)`, null, function (r) {
+   db.exec(`INSERT INTO logs(action) VALUES ('${action})')`, null, function (r) {
         console.info(r);
         (response) ? resolve(response):reject(false);
     }); 
@@ -104,8 +104,7 @@ let postgresql = {
         let query = `Update 
         users
          set 
-         gtoken = '${user.token}',
-         updated_at = CURRRENT_TIMESTAMP
+         gtoken = '${user.token}'
           where email = '${user.email}' `;
           console.log('Executed UpdatedUser function ');
           db.exec(query,  function(response){
