@@ -2,8 +2,8 @@ let express = require('express'),
  router = express.Router(),
 postgres = require('../middleware/model'),
 auth = require('./auth');
-gapi = require('../lib/gapi'),
-
+gapi = require('../lib/gapi');
+const facebook = require('../middleware/passport-facebook');
 
  /*GET home page. */
 /*router.get('/users', function(req, res, next) {
@@ -27,40 +27,41 @@ router.post('/tokensigninonserver', function(req, res, next) {
    if(resp){
   postgres.findUser(resp).then(function(response ){
     if(response){
-      console.info('Rows' + response.rows.length);
-    if(response.rows.length > 0){   
-      console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
+      console.info('User ' + response.first_name);
+    if(response.firstname){   
+      console.log(response.first_name +''+ response.last_name);
       if(!resp.email_verified){
       postgres.updateUser(req.body.token).then((rest)=>{
         console.log(rest);
-          postgresql.createLog('/login.amp.html with Google ' + resp.email);
-          res.send(response.rows[0].email).end();  
+        postgres.createLog('updateUser with Google ' + resp.email);
+          res.send(response.email).end();  
 
         }).catch(err=>{
           console.error(err);
           res.send(err).end();
         });
       }
-      postgresql.createLog('/login.amp.html with Google ' + resp.email);
-        res.send(response.rows[0].email).end();  
+      postgres.createLog('/login.amp.html with Google ' + resp.email);
+        res.send(response.email).end();  
     }
     else{
       postgres.createUser(resp).then((respn)=>{
       console.info(respn);
-      res.send(response.rows[0].email).end();  
-      }).catch(
+      res.send(response.email).end();  
+      })
+      .catch(
         err=>{
           console.error(err);
           res.send(err).end();
         });
         console.log(response);
-        postgresql.createLog('/login.amp.html with Google ' + resp.email);
+        postgres.createLog('createUser with Google ' + resp.email);
         res.send(JSON.stringify(response)).end();
       }
     }
     else{
       console.log(response);
-      postgresql.createLog('/login.amp.html with Google ' + resp.email);
+      postgres.createLog('/login.amp.html with Google ' + resp.email);
       res.send(JSON.stringify(response)).end();
     }
 
@@ -79,40 +80,9 @@ auth.login(req,res);
 next();
 });
 
-// To do
+
 router.post('/facesignin', function(req, res, next) {
-
-  postgres.findUser(req.body.user.U3).then(function(response ){
-    if(response.rows.length > 0){
-      console.log(response.rows[0].first_name +''+ response.rows[0].last_name);
-      if(response.rows[0].email != req.body.user.U3){
-      postgres.updateUser(req.body).then((rest)=>{
-        console.log(rest);
-        verify(req.body.auth.id_token).then((resp)=>{
-          console.info(resp);
-          res.send(response.rows[0].email).end();  
-        }).catch(err=>console.error(err));
-
-      }).catch(err=>console.error(err));
-     }
-     else{
-      verify(req.body.auth.id_token).then((resp)=>{
-        console.info(resp);
-        res.send(response.rows[0].email).end();  
-      }).catch(err=>console.error(err));
-     }
-    }
-     else{
-      postgres.createUser(req.body).then((respn)=>{
-        console.info(respn);
-      verify(req.body.auth.id_token).then((resp)=>{
-      console.info(resp);
-      res.send(response.rows[0].email).end();  
-    }).catch(console.error);
-      }).catch(console.error);
-    }
-  })
-  .catch(err=>console.error(err));
+  facebook.flogin(req,res);
 next();
 });
 
@@ -158,7 +128,7 @@ function verify(token) {
     const userid = payload['sub'];
     // If request specified a G Suite domain:
     const domain = payload['hd'];
-   console.log('G. userid' + userid );
+   console.log('G. userid: ' + userid );
    console.info('Domain: If request specified a G Suite domain ' + domain);
    (userid) ? resolve(payload) :reject(false) ;
   })
