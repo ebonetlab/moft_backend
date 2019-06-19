@@ -82,7 +82,10 @@ next();
 
 
 router.post('/facesignin', function(req, res, next) {
-  facebook.flogin(req,res);
+  facebook.flogin(req,function(err,user){
+    if(err)console.error(err);
+   res.send(user).end();
+});
 next();
 });
 

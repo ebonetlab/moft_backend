@@ -10,7 +10,8 @@ io.init({
 
 var createError = require('http-errors');
 var express = require('express');
-var session = require('cookie-session')
+var session = require('cookie-session');
+require('dotenv').config();
 var cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');

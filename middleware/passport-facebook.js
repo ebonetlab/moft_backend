@@ -1,3 +1,4 @@
+
 const config = require('../config/config.json');
 const postgres = require('./model');
 const passport = require('passport');
@@ -6,16 +7,18 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 
 let facebook = {
     //Flatan los logs 
-flogin: function(req,res){
+flogin: function(req,callback){
     console.info('Facebook Login engage');
-    //passport.authenticate('facebook', {scope: ['user_friends', 'manage_pages'] });
+    passport.authenticate('facebook', { scope : ['public_profile', 'email','user_friends', 'manage_pages']})
     passport.use(new FacebookStrategy({
-        clientID: config.facebookAuth.clientID,
-        clientSecret: config.facebookAuth.clientSecret,
-        callbackURL: "http://localhost:3000/auth/facebook/callback",
-        profileFields: ['id', 'displayName', 'photos', 'email'],
+        clientID: process.env.FACEBOOK_CLIENT_ID,
+        clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+        callbackURL: config.FacebookStrategy.callbackURL,
+        profileFields: config.FacebookStrategy.profileFields,
         enableProof: true
       }, function(accessToken, refreshToken, profile, cb) {
+          console.log(accessToken);
+          console.log(refreshToken);
         postgres.findUser(profile.user).then(function(response ){
             if(response.name){
               console.log(response.first_name +''+ response.last_name);
@@ -23,23 +26,22 @@ flogin: function(req,res){
               postgres.updateUser(req.body).then((rest)=>{
                 console.log(rest);
                 console.info(resp);
-                return cb(err, user);
-                //res.send(response.rows[0].email).end(); 
+                callback(err, user);
+                
                
               }).catch(err=>console.error(err));
              }
              else{
             
                 console.info(resp);
-                res.send(response.rows[0].email).end();  
+                res.send(response.email).end();  
              }
             }
              else{
               postgres.createUser(req.body).then((respn)=>{
-                console.info(respn);
-             
-              console.info(resp);
-              res.send(response.rows[0].email).end();  
+                   
+              console.info(respn);
+              callback(respn);  
         
               }).catch(console.error);
             }
