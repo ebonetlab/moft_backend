@@ -19,25 +19,24 @@ var auth = {
             return;
         }
      
-    
-                if(err)console.error(err);
-                req.body.user.email = req.body.username;
-                postgresql.findUser(req.body.user).then(user=>{
-                bcrypt.compare(req.body.password, user.single_token, function(err, res) {     
+           
+               
+                req.body.email = req.body.username;
+                postgresql.findUser(req.body).then(user=>{
+                bcrypt.compare(req.body.password, user.single_token, function(err, resp) {     
                 if(err)console.error(err);          
-                    if (!res) {
+                    if (!resp) {
                         res.status(201).json({
                             status: 401,
                             message: "Invalid credentials"
                         });
                         return;
                     }
-                    postgresql.updateLastLogin(user.rows[0].email).then(res =>{
-                    if(res)console.log(error);
-                    
+                    postgresql.updateLastLogin(user.email).then(result =>{
+                   console.log(result);
                     postgresql.createLog('/login.amp.html with Single Sign in' + req.body.username).then(response=>{
                         console.log(response);
-                    res.status(201).json(usr, req.body.user.single_token);
+                    res.status(201).json('USer Succesfully Log in');
                     }).catch(error=>console.error(error));
                     })
                     .catch(error=>console.error(error));

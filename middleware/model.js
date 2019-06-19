@@ -24,10 +24,10 @@ let postgresql = {
         var d = date.getFullYear()+"-"+((date.getMonth() < 10) ? "0"+date.getMonth() : date.getMonth())+"-"+((date.getDate() < 10) ? "0"+date.getDate() : date.getDate())+" "+date.getHours()+":"+date.getMinutes()+":"+((date.getSeconds()<10) ? "0"+date.getSeconds() : date.getSeconds());
         return d;
     },
-    updateLastLogin :(email)=>{
+    updateLastLogin :function(email){
         console.log('Executed updateLastLogin function for ' + email);
         return new Promise((resolve, reject) => {
-            let query  = `Update users set updated_at = '${postgresql.getdate()}' from users  where email =  '${email}'`;
+            let query  = `Update users set updated_at = NOW()  where email =  '${email}'`;
             db.exec(query,  function(response){
  
                 (response) ? resolve(response):reject(false);
@@ -39,12 +39,12 @@ let postgresql = {
     }
      ,
     findUser : (payload)=>{
-        console.log('Executed findUser function ' + payload.name);
+        console.log('Executed findUser function ' + payload.email);
         return new Promise((resolve, reject) => {
             let query  = `select * from users  where email =  '${payload.email}'`;
             db.exec(query,  function(response){
  
-                (response) ? resolve(response):reject(false);
+                (response.rows.length > 0) ? resolve(response.rows[0]):reject(false);
             });             
        
    
@@ -69,7 +69,7 @@ let postgresql = {
          console.log('Executed create Single User function ' + user)
             let query = `Insert into users (first_name,last_name,email, single_token) 
             VALUES('${user.first_name}','${user.last_name}','${user.email}','${user.single_token}')`;
-            db.exec(query,  function(response){
+            db.exec(query, function(response){
    
                 (response) ? resolve(response):reject(false);
             }); 
@@ -78,8 +78,9 @@ let postgresql = {
     createLog: (action)=>{
         return new Promise((resolve, reject) => {
             //Create a log entry @ moft_logs table
-   db.exec(`INSERT INTO logs(action) VALUES ('${action})')`, null, function (r) {
-        console.info(r);
+            let query = `INSERT INTO logs(action) VALUES ('${action}')`;
+   db.exec(query,  function (response) {
+        console.info(response);
         (response) ? resolve(response):reject(false);
     }); 
 })  

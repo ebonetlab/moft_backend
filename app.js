@@ -74,7 +74,9 @@ app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+ if(!req && !res){
   next(createError(404));
+ }
 });
 
 app.use(session({
