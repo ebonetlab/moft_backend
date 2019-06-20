@@ -13,7 +13,7 @@ flogin: function(req,callback){
     passport.use(new FacebookStrategy({
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: config.facebookAuth.callbackURLocal,
+        callbackURL: config.facebookAuth.callbackURL,
         profileFields: config.facebookAuth.profileFields,
         enableProof: true
       }, function(accessToken, refreshToken, profile, cb) {

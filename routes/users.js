@@ -89,12 +89,14 @@ router.post('/facesignin', function(req, res, next) {
 //next();
 });
 router.get('/auth/facebook/callback',
-passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages']}), function(req, res) {
+passport.authenticate('facebook',{ successRedirect: 'https://moft.eabonet.com/dashboard.amp.html',failureRedirect: 'https://moft.eabonet.com/login.amp.html'})); 
+
+/*,function(req, res) {
     // Successful authentication, redirect home.
     console.log(req);
     //res.send(JSON.stringify('login')).end();
     res.redirect('/callbackface');
-  });
+  });*/
 router.get('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
   
