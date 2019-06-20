@@ -13,9 +13,9 @@ flogin: function(req,callback){
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         callbackURL: config.facebookAuth.callbackURL,
-        profileFields: config.facebookAuth.profileFields
+        profileFields: config.facebookAuth.profileFields,
+        enableProof: true
       }, function(accessToken, refreshToken, profile, cb) {
-  
           console.log(accessToken);
           console.log(refreshToken);
         postgres.findUser(profile.user).then(function(response ){
@@ -25,7 +25,7 @@ flogin: function(req,callback){
               postgres.updateUser(req.body).then((rest)=>{
                 console.log(rest);
                 console.info(resp);
-                return cb(err, user);
+                callback(err, user);
                 
                
               }).catch(err=>console.error(err));
