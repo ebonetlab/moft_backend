@@ -8,7 +8,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 let facebook = {
     //Flatan los logs 
 flogin: function(req,callback){
-    console.info('Facebook Login engage');
+    console.info('Facebook Login engage with '+ process.env.FACEBOOK_CLIENT_ID);
     passport.use(new FacebookStrategy({
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
