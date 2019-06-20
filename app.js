@@ -18,7 +18,6 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 let logger = require('morgan'),
-path = require('path'),
 http = require('http');
 
 //app.all('*', [require('./middleware/validateRequest')]);
