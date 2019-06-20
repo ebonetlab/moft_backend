@@ -8,24 +8,25 @@ io.init({
   }
 });
 
-var createError = require('http-errors');
-var express = require('express');
-var session = require('cookie-session');
+let createError = require('http-errors');
+let express = require('express');
+let session = require('cookie-session');
 require('dotenv').config();
-var cors = require('cors');
-var path = require('path');
-var cookieParser = require('cookie-parser');
+let cors = require('cors');
+const passport = require('passport');
+let path = require('path');
+let cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-var logger = require('morgan'),
+let logger = require('morgan'),
 path = require('path'),
 http = require('http');
 
 //app.all('*', [require('./middleware/validateRequest')]);
 
-var indexRouter = require('./routes/index');
-var   usersRouter = require('./routes/users');
+let indexRouter = require('./routes/index');
+let   usersRouter = require('./routes/users');
 
-var app = express();
+let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -42,8 +43,13 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(bodyParser.json());
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
 /*let allowedOrigins = ['https://moft.eabonet.com'];
-var corsOptions = {
+let corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true)
@@ -97,7 +103,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var server = http.createServer(app)
+let server = http.createServer(app)
 server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'))
 });

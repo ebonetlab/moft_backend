@@ -47,10 +47,15 @@ flogin: function(req,callback){
             }
           })
           .catch(err=>console.error(err));
-      })
-      
-      );
+      }));
 
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
 }
 };
 
