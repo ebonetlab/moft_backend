@@ -50,7 +50,7 @@ flogin: function(req,callback){
       })
       
       );
-console.log(req);
+
 }
 };
 

@@ -89,9 +89,9 @@ router.post('/facesignin', function(req, res, next) {
 //next();
 });
 router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
+  passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
     // Successful authentication, redirect home.
+    console.log(req);
     res.send(JSON.stringify('login')).end();
   });
 router.get('/oauth2callback', function(req, res, next) {
