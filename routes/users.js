@@ -92,7 +92,8 @@ router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
     // Successful authentication, redirect home.
     console.log(req);
-    res.send(JSON.stringify('login')).end();
+    //res.send(JSON.stringify('login')).end();
+    res.redirect('/');
   });
 router.get('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
