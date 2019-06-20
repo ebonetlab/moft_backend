@@ -13,8 +13,7 @@ flogin: function(req,callback){
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         callbackURL: config.facebookAuth.callbackURL,
-        profileFields: config.facebookAuth.profileFields,
-        enableProof: true
+        profileFields: config.facebookAuth.profileFields
       }, function(accessToken, refreshToken, profile, cb) {
   
           console.log(accessToken);
