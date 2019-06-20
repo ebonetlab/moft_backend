@@ -3,7 +3,7 @@ const config = require('../config/config.json');
 const postgres = require('./model');
 const passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
-
+require('dotenv').config();
 
 let facebook = {
     //Flatan los logs 

@@ -13,3 +13,4 @@ package-lock.json
 config
 logs
 *.sql
+*.env
