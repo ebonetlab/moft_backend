@@ -9,14 +9,14 @@ let facebook = {
     //Flatan los logs 
 flogin: function(req,callback){
     console.info('Facebook Login engage');
-    passport.authenticate('facebook', { scope : ['public_profile', 'email','user_friends', 'manage_pages']})
     passport.use(new FacebookStrategy({
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: config.FacebookStrategy.callbackURL,
-        profileFields: config.FacebookStrategy.profileFields,
+        callbackURL: config.facebookAuth.callbackURL,
+        profileFields: config.facebookAuth.profileFields,
         enableProof: true
       }, function(accessToken, refreshToken, profile, cb) {
+  
           console.log(accessToken);
           console.log(refreshToken);
         postgres.findUser(profile.user).then(function(response ){
@@ -26,7 +26,7 @@ flogin: function(req,callback){
               postgres.updateUser(req.body).then((rest)=>{
                 console.log(rest);
                 console.info(resp);
-                callback(err, user);
+                return cb(err, user);
                 
                
               }).catch(err=>console.error(err));
@@ -47,9 +47,10 @@ flogin: function(req,callback){
             }
           })
           .catch(err=>console.error(err));
-      }
-    ));
-
+      })
+      
+      );
+console.log(req);
 }
 };
 

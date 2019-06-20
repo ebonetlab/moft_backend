@@ -4,7 +4,7 @@ postgres = require('../middleware/model'),
 auth = require('./auth');
 gapi = require('../lib/gapi');
 const facebook = require('../middleware/passport-facebook');
-
+const passport = require('passport');
  /*GET home page. */
 /*router.get('/users', function(req, res, next) {
   res.render('users', { title: 'Moft Users' });
@@ -72,12 +72,12 @@ router.post('/tokensigninonserver', function(req, res, next) {
     console.error(err);
     res.send(JSON.stringify(err.message)).end();
   });
-  next();
+  //next();
 });
 
 router.post('/singlesignin', function(req, res, next) {
 auth.login(req,res);
-next();
+//next();
 });
 
 
@@ -86,9 +86,14 @@ router.post('/facesignin', function(req, res, next) {
     if(err)console.error(err);
    res.send(user).end();
 });
-next();
+//next();
 });
-
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.send(JSON.stringify('login')).end();
+  });
 router.get('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
   
