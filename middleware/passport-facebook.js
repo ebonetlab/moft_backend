@@ -10,6 +10,7 @@ let facebook = {
 flogin: function(req,callback){
     console.info('Facebook Login engage with '+ process.env.FACEBOOK_CLIENT_ID);
     console.info('callbackURL: '+ config.facebookAuth.callbackURL);
+    console.info('Token: '+ req.body.token);
     passport.use(new FacebookStrategy({
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
