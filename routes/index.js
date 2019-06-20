@@ -37,5 +37,9 @@ router.post('/', function(req, res, next) {
     };
     res.end('cal.jade', locals);
   });
+  router.get('/callbackface', function(req, res){
+    console.log(req);
+    res.status(200).end();
+  });
 
 module.exports = router;

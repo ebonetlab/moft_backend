@@ -26,7 +26,7 @@ flogin: function(req,callback){
               postgres.updateUser(req.body).then((rest)=>{
                 console.log(rest);
                 console.info(resp);
-                callback(err, user);
+                return cb(err, user);
                 
                
               }).catch(err=>console.error(err));

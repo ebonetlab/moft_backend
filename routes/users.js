@@ -93,7 +93,7 @@ passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages']}), f
     // Successful authentication, redirect home.
     console.log(req);
     //res.send(JSON.stringify('login')).end();
-    res.redirect('/');
+    res.redirect('/callbackface');
   });
 router.get('/oauth2callback', function(req, res, next) {
   var code = req.originalUrl;
