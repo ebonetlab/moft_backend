@@ -5,19 +5,7 @@ auth = require('./auth');
 gapi = require('../lib/gapi');
 const facebook = require('../middleware/passport-facebook');
 const passport = require('passport');
- /*GET home page. */
-/*router.get('/users', function(req, res, next) {
-  res.render('users', { title: 'Moft Users' });
-  res.header("Access-Control-Allow-Origin", "*");
-  //res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
-      if (req.method == 'OPTIONS') {
-        res.status(200).end();
-    
-    } else {
-        next();
-    }
-});*/
+
 
 router.post('/tokensigninonserver', function(req, res, next) {
 
@@ -92,11 +80,30 @@ router.post('/facesignin', function(req, res, next) {
 });
 //next();
 });
-router.get('/', function(req, res){
-  //res.render('index', { user: req.user });
-  console.log(req);
-  res.status(200).end();
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Moft Users' });
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
+      if (req.method == 'OPTIONS') {
+        res.status(200).end();
+    
+    } else {
+        next();
+    }
 });
+router.post('/', function(req, res, next) {
+    res.render('index', { title: 'Moft Users' });
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
+        if (req.method == 'OPTIONS') {
+          res.status(200).end();
+      
+      } else {
+          next();
+      }
+  });
 
 router.get('/account', ensureAuthenticated, function(req, res){
   res.render('account', { user: req.user });
