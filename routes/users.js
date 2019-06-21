@@ -81,10 +81,10 @@ router.post('/facesignin', function(req, res, next) {
 //next();
 });
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Moft Users' });
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
+  res.setHeader('index', { title: 'Moft Users' });
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
       if (req.method == 'OPTIONS') {
         res.status(200).end();
     
@@ -93,10 +93,10 @@ router.get('/', function(req, res, next) {
     }
 });
 router.post('/', function(req, res, next) {
-    res.render('index', { title: 'Moft Users' });
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
+    res.setHeader('index', { title: 'Moft Users' });
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-type, Accept, x-token, X-Key");
         if (req.method == 'OPTIONS') {
           res.status(200).end();
       
