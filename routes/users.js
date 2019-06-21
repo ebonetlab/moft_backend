@@ -79,7 +79,11 @@ router.post('/singlesignin', function(req, res, next) {
 auth.login(req,res);
 //next();
 });
-
+router.post('/login', 
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
 
 router.post('/facesignin', function(req, res, next) {
   facebook.flogin(req,function(err,user){
@@ -88,8 +92,31 @@ router.post('/facesignin', function(req, res, next) {
 });
 //next();
 });
+router.get('/', function(req, res){
+  //res.render('index', { user: req.user });
+  console.log(req);
+  res.status(200).end();
+});
+
+router.get('/account', ensureAuthenticated, function(req, res){
+  res.render('account', { user: req.user });
+});
+router.get('/auth/facebook', passport.authenticate('facebook',{scope:["id", "displayName", "photos", "email"]}));
 router.get('/auth/facebook/callback',
-passport.authenticate('facebook',{ successRedirect: 'https://moft.eabonet.com/dashboard.amp.html',failureRedirect: 'https://moft.eabonet.com/login.amp.html'})); 
+  passport.authenticate('facebook', { successRedirect : '/', failureRedirect: '/login' }),function(req, res) {
+    //res.redirect('/');
+    console.log(req);
+    res.send(JSON.stringify('Logged in')).end();
+  });
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) { return next(); }
+    res.redirect('/login')
+  }
+
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+}); 
 
 /*,function(req, res) {
     // Successful authentication, redirect home.

@@ -2,6 +2,7 @@
 //const jwtStrategy = require('passport-jwt').Strategy;
 const jwt = require('jsonwebtoken');
 //const ExtractJWT = jwtStrategy.ExtractJwt;
+//const LocalStrategy = require('passport-local').Strategy;
 const postgresql = require('../middleware/model');
 const error = require('../logs/error.log');
 const config = require('../config/config.json');
@@ -22,6 +23,7 @@ var auth = {
            
                
                 req.body.email = req.body.username;
+
                 postgresql.findUser(req.body).then(user=>{
                 bcrypt.compare(req.body.password, user.single_token, function(err, resp) {     
                 if(err)console.error(err);          
